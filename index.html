@@ -109,3 +109,214 @@
     </script>
 </body>
   </html>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>N5 Ninja Master</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --primary: #ff6b6b;
+            --secondary: #4ecdc4;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            padding: 15px;
+            background: #f8f9fa;
+            line-height: 1.6;
+        }
+        
+        .tab-bar {
+            display: flex;
+            gap: 5px;
+            margin: 15px 0;
+        }
+        
+        .tab-button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: #ddd;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        
+        .tab-button.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 16px;
+            margin: 10px 0;
+            width: 100%;
+        }
+        
+        .progress-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 15px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .category {
+            display: none;
+        }
+        
+        .category.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h1>🗻 N5 Ninja Master</h1>
+    
+    <!-- Tab Bar -->
+    <div class="tab-bar">
+        <button class="tab-button active" onclick="showCategory('vocab')">📖 Vocab</button>
+        <button class="tab-button" onclick="showCategory('grammar')">✍️ Grammar</button>
+        <button class="tab-button" onclick="showCategory('kanji')">🖌 Kanji</button>
+    </div>
+
+    <!-- Vocabulary Category -->
+    <div id="vocab" class="category active">
+        <div class="card">
+            <h3>Vocabulary (語彙)</h3>
+            <div id="wordDisplay">食べます (たべます) - to eat</div>
+            <p class="hint">💡 Memory Hack: "Tabe-" sounds like "table"</p>
+            <button onclick="nextWord()">Next Word →</button>
+            <button onclick="markLearned()" style="background: var(--secondary)">✅ Mark Learned</button>
+        </div>
+    </div>
+
+    <!-- Grammar Category -->
+    <div id="grammar" class="category">
+        <div class="card">
+            <h3>Grammar (文法)</h3>
+            <div id="grammarPoint">～ます form</div>
+            <p>Usage: Polite form of verbs</p>
+            <p>Example: 食べます (I eat), 行きます (I go)</p>
+            <button onclick="nextGrammar()">Next Point →</button>
+        </div>
+    </div>
+
+    <!-- Kanji Category -->
+    <div id="kanji" class="category">
+        <div class="card">
+            <h3>Kanji (漢字)</h3>
+            <div id="kanjiDisplay">日</div>
+            <p>Meaning: Sun/Day</p>
+            <p>Reading: ニチ (nichi), ひ (hi)</p>
+            <button onclick="nextKanji()">Next Kanji →</button>
+        </div>
+    </div>
+
+    <!-- Progress Section -->
+    <div class="progress-container">
+        <h4>Your Progress 🏆</h4>
+        <p>📖 Words: <span id="wordCount">0</span>/100</p>
+        <p>✍️ Grammar: <span id="grammarCount">0</span>/20</p>
+        <p>🖌 Kanji: <span id="kanjiCount">0</span>/50</p>
+    </div>
+
+    <script>
+    // Vocabulary Data
+    const vocabulary = [
+        ["食べます (たべます)", "to eat", "TABE sounds like TABLE"],
+        ["行きます (いきます)", "to go", "IKI means 'go' in many languages"],
+        ["見ます (みます)", "to see", "MI like 'me' - see yourself"]
+    ];
+
+    // Grammar Data
+    const grammar = [
+        ["～ます form", "Polite verb form", "Add ます to verb stems"],
+        ["～です", "To be (copula)", "Used with nouns and adjectives"]
+    ];
+
+    // Kanji Data
+    const kanjiList = [
+        ["日", "Sun/Day", "ニチ, ひ"],
+        ["月", "Moon/Month", "ゲツ, つき"]
+    ];
+
+    let currentCategory = 'vocab';
+    let currentWord = 0;
+    let currentGrammar = 0;
+    let currentKanji = 0;
+    let progress = {
+        words: new Set(),
+        grammar: new Set(),
+        kanji: new Set()
+    };
+
+    function showCategory(category) {
+        document.querySelectorAll('.category').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+        document.getElementById(category).classList.add('active');
+        document.querySelector(`[onclick="showCategory('${category}')"]`).classList.add('active');
+        currentCategory = category;
+    }
+
+    function updateProgress() {
+        document.getElementById('wordCount').textContent = progress.words.size;
+        document.getElementById('grammarCount').textContent = progress.grammar.size;
+        document.getElementById('kanjiCount').textContent = progress.kanji.size;
+        localStorage.setItem('n5progress', JSON.stringify(progress));
+    }
+
+    // Vocabulary Functions
+    function nextWord() {
+        currentWord = (currentWord + 1) % vocabulary.length;
+        document.getElementById("wordDisplay").innerHTML = 
+            `<strong>${vocabulary[currentWord][0]}</strong><br>
+            ${vocabulary[currentWord][1]}`;
+        document.querySelector(".hint").textContent = `💡 ${vocabulary[currentWord][2]}`;
+    }
+
+    function markLearned() {
+        progress.words.add(currentWord);
+        updateProgress();
+    }
+
+    // Grammar Functions
+    function nextGrammar() {
+        currentGrammar = (currentGrammar + 1) % grammar.length;
+        document.getElementById("grammarPoint").innerHTML = 
+            `<strong>${grammar[currentGrammar][0]}</strong><br>
+            ${grammar[currentGrammar][1]}`;
+    }
+
+    // Kanji Functions
+    function nextKanji() {
+        currentKanji = (currentKanji + 1) % kanjiList.length;
+        document.getElementById("kanjiDisplay").innerHTML = 
+            `<span style="font-size:2em">${kanjiList[currentKanji][0]}</span><br>
+            ${kanjiList[currentKanji][1]}`;
+    }
+
+    // Load Progress
+    window.onload = function() {
+        const saved = localStorage.getItem('n5progress');
+        if(saved) progress = JSON.parse(saved);
+        updateProgress();
+    }
+    </script>
+</body>
+</html>

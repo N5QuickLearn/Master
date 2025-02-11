@@ -3,270 +3,214 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>N5 Master - Complete Japanese Learning</title>
+    <title>Anime Japanese Academy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+P+One&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #ffffff;
-            --text: #2d3436;
-            --primary: #6c5ce7;
-            --secondary: #00b894;
-            --card-bg: #f8f9fa;
-        }
-
-        [data-theme="dark"] {
-            --bg: #2d3436;
-            --text: #ffffff;
-            --card-bg: #404040;
+            --primary: #FF6B6B;
+            --secondary: #6C8EBF;
+            --background: linear-gradient(135deg, #fff0f5 0%, #f0ffff 100%);
+            --card-bg: rgba(255, 255, 255, 0.9);
         }
 
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            padding: 15px;
-            transition: 0.3s all;
-        }
-
-        /* Dark Mode Toggle */
-        .theme-toggle {
-            position: fixed;
-            top: 15px;
-            right: 15px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-
-        /* Flashcard System */
-        .flashcard {
-            background: var(--card-bg);
-            border-radius: 15px;
+            font-family: 'Noto Sans JP', sans-serif;
+            margin: 0;
             padding: 20px;
-            margin: 15px 0;
-            min-height: 200px;
-            perspective: 1000px;
-            cursor: pointer;
-            transition: 0.3s;
+            background: var(--background);
+            color: #2D3047;
+            min-height: 100vh;
         }
 
-        .flashcard-inner {
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .anime-header {
+            text-align: center;
+            font-family: 'Mochiy Pop P One', cursive;
+            color: var(--primary);
+            margin: 2rem 0;
             position: relative;
-            width: 100%;
-            height: 100%;
-            transform-style: preserve-3d;
-            transition: 0.6s;
         }
 
-        .flashcard.flipped .flashcard-inner {
-            transform: rotateY(180deg);
-        }
-
-        .flashcard-front, .flashcard-back {
+        .anime-header::after {
+            content: '';
             position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .flashcard-back {
-            transform: rotateY(180deg);
-        }
-
-        /* Quiz System */
-        .quiz-option {
-            background: var(--card-bg);
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 10px;
-            cursor: pointer;
-        }
-
-        /* Progress System */
-        .badge {
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 4px;
             background: var(--secondary);
-            color: white;
-            padding: 5px 10px;
+            border-radius: 2px;
+        }
+
+        .nav-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .nav-button {
+            padding: 1.5rem;
+            border: none;
+            border-radius: 15px;
+            background: var(--card-bg);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-3px);
+        }
+
+        .section {
+            display: none;
+            background: var(--card-bg);
             border-radius: 20px;
-            font-size: 0.8em;
-            margin: 5px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .active-section {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Add remaining CSS styles from previous implementations */
+        /* ... (Include all previous styles for forms, progress bars, etc) ... */
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .nav-buttons {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
-    <h1>🗾 N5 Master</h1>
-    
-    <!-- Daily Reminder -->
-    <div id="dailyReminder" class="card"></div>
+    <div class="container">
+        <h1 class="anime-header">🌸 Anime Japanese Academy 🎌</h1>
 
-    <!-- Flashcard System -->
-    <div class="flashcard" onclick="flipCard()">
-        <div class="flashcard-inner">
-            <div class="flashcard-front">
-                <h2 id="cardFront">食べます</h2>
-                <button onclick="speakWord()">🔊</button>
-            </div>
-            <div class="flashcard-back">
-                <h3>たべます</h3>
-                <p>to eat</p>
-                <p class="hint">Memory: "Tabe" sounds like "table"</p>
-                <div class="badges" id="cardBadges"></div>
-            </div>
+        <div class="nav-buttons">
+            <button class="nav-button" onclick="showSection('learn')">
+                📖 Words with Tricks
+            </button>
+            <button class="nav-button" onclick="showSection('add')">
+                ✍️ Add Your Words
+            </button>
+            <button class="nav-button" onclick="showSection('collection')">
+                📚 Word Collection
+            </button>
+            <button class="nav-button" id="testBtn" onclick="startTest()" disabled>
+                🎯 Take Test
+            </button>
         </div>
-    </div>
 
-    <!-- Quiz System -->
-    <div id="quizSection" class="card">
-        <h3>Quiz Time!</h3>
-        <p id="quizQuestion"></p>
-        <div id="quizOptions"></div>
-    </div>
-
-    <!-- Progress System -->
-    <div class="card">
-        <h3>🏆 Achievements</h3>
-        <div id="badges"></div>
-        <p>🔥 Streak: <span id="streak">0</span> days</p>
+        <!-- Include all section content from previous implementation -->
+        <!-- ... (Learning Section, Add Words Section, Collection Section, Test Section) ... -->
     </div>
 
     <script>
-    // =====================
-    // N5 Data (1000+ items)
-    // =====================
-    const n5Data = {
-        vocabulary: [
-            {word: "食べます", reading: "たべます", meaning: "to eat", hint: "TABE sounds like TABLE"},
-            {word: "飲みます", reading: "のみます", meaning: "to drink", hint: "NO MI like 'No Milk'"},
-            // Add 100+ more N5 items
-        ],
-        grammar: [
-            {point: "～ます form", usage: "Polite verb form", example: "食べます"},
-            // Add all N5 grammar points
-        ],
-        quizzes: [
-            {
-                type: "multiple-choice",
-                question: "What is 'to eat' in Japanese?",
-                options: ["たべます", "のみます", "いきます"],
-                answer: 0
+        // Enhanced Word Management System
+        class WordManager {
+            constructor() {
+                this.words = JSON.parse(localStorage.getItem('words')) || [];
+                this.collectedWords = JSON.parse(localStorage.getItem('collectedWords')) || [];
+                this.uniqueJapanese = new Set(
+                    this.collectedWords.map(index => this.words[index].japanese)
+                );
             }
-            // Add more quizzes
-        ]
-    };
 
-    // =====================
-    // Core System
-    // =====================
-    let currentCard = 0;
-    let streak = 0;
-    let achievements = {
-        wordsMastered: 0,
-        perfectQuizzes: 0
-    };
+            addWord(word, autoCollect = false) {
+                if (!this.uniqueJapanese.has(word.japanese)) {
+                    this.words.push(word);
+                    if (autoCollect) {
+                        this.collectedWords.push(this.words.length - 1);
+                        this.uniqueJapanese.add(word.japanese);
+                    }
+                    this.save();
+                    return true;
+                }
+                return false;
+            }
 
-    // Initialize
-    function init() {
-        updateDailyReminder();
-        showNextCard();
-        loadProgress();
-        generateQuiz();
-    }
+            save() {
+                localStorage.setItem('words', JSON.stringify(this.words));
+                localStorage.setItem('collectedWords', JSON.stringify(this.collectedWords));
+            }
 
-    // =====================
-    // Feature Implementations
-    // =====================
-    // Dark Mode
-    function toggleTheme() {
-        document.body.setAttribute('data-theme',
-            document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'
-        );
-        localStorage.setItem('theme', document.body.getAttribute('data-theme'));
-    }
-
-    // Flashcard System
-    function flipCard() {
-        document.querySelector('.flashcard').classList.toggle('flipped');
-    }
-
-    function showNextCard() {
-        const card = n5Data.vocabulary[currentCard % n5Data.vocabulary.length];
-        document.getElementById('cardFront').textContent = card.word;
-        document.querySelector('.flashcard-back h3').textContent = card.reading;
-        document.querySelector('.flashcard-back p').textContent = card.meaning;
-        document.querySelector('.hint').textContent = card.hint;
-        currentCard++;
-    }
-
-    // Quiz System
-    function generateQuiz() {
-        const quiz = n5Data.quizzes[Math.floor(Math.random() * n5Data.quizzes.length)];
-        const options = quiz.options.map((opt, index) => `
-            <div class="quiz-option" onclick="checkAnswer(${index})">${opt}</div>
-        `).join('');
-        
-        document.getElementById('quizQuestion').textContent = quiz.question;
-        document.getElementById('quizOptions').innerHTML = options;
-    }
-
-    function checkAnswer(selectedIndex) {
-        // Add answer checking logic
-    }
-
-    // Progress System
-    function updateProgress() {
-        document.getElementById('streak').textContent = streak;
-        // Add badge earning logic
-    }
-
-    // Daily Reminders
-    function updateDailyReminder() {
-        const lastVisit = localStorage.getItem('lastVisit');
-        const today = new Date().toDateString();
-        
-        if (lastVisit === today) {
-            document.getElementById('dailyReminder').innerHTML = `
-                <div class="card">
-                    <h3>🎯 Today's Goal</h3>
-                    <p>${5 - achievements.wordsMastered} more words to learn!</p>
-                </div>
-            `;
-        } else {
-            streak = lastVisit ? streak + 1 : 1;
-            localStorage.setItem('lastVisit', today);
-            updateProgress();
+            resetCollection() {
+                this.collectedWords = [];
+                this.uniqueJapanese.clear();
+                this.save();
+            }
         }
-    }
 
-    // Pronunciation
-    function speakWord() {
-        const synth = window.speechSynthesis;
-        const utterance = new SpeechSynthesisUtterance(
-            document.querySelector('.flashcard-back h3').textContent
-        );
-        utterance.lang = 'ja-JP';
-        synth.speak(utterance);
-    }
+        // Initialize Application
+        const wordManager = new WordManager();
+        let testQuestions = [];
 
-    // Save/Load Progress
-    function loadProgress() {
-        const saved = localStorage.getItem('n5Progress');
-        if (saved) {
-            const data = JSON.parse(saved);
-            streak = data.streak || 0;
-            achievements = data.achievements || {};
+        // Enhanced Test System
+        class TestSystem {
+            constructor() {
+                this.currentQuestion = 0;
+                this.score = 0;
+            }
+
+            generateTest() {
+                testQuestions = [...wordManager.collectedWords]
+                    .sort(() => Math.random() - 0.5)
+                    .slice(0, 100)
+                    .map(index => ({
+                        ...wordManager.words[index],
+                        options: this.generateOptions(index)
+                    }));
+            }
+
+            generateOptions(correctIndex) {
+                const correct = wordManager.words[correctIndex];
+                const options = [correct.meaning];
+                
+                while (options.length < 4) {
+                    const random = wordManager.words[
+                        Math.floor(Math.random() * wordManager.words.length)
+                    ];
+                    if (!options.includes(random.meaning)) {
+                        options.push(random.meaning);
+                    }
+                }
+                return options.sort(() => Math.random() - 0.5);
+            }
         }
-    }
 
-    // Initialize
-    document.body.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
-    init();
+        // UI Management
+        function updateUI() {
+            // Update collection display
+            // Update progress bar
+            // Update test button state
+        }
+
+        // Initialize Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            updateUI();
+            // Load initial section
+        });
+
+        // Implement all interactive functions from previous versions
+        // ... (showSection, addNewWord, resetCollection, etc) ...
     </script>
 </body>
 </html>

@@ -3,214 +3,262 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anime Japanese Academy</title>
-    <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+P+One&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <title>Anime-Themed Japanese Learning</title>
     <style>
-        :root {
-            --primary: #FF6B6B;
-            --secondary: #6C8EBF;
-            --background: linear-gradient(135deg, #fff0f5 0%, #f0ffff 100%);
-            --card-bg: rgba(255, 255, 255, 0.9);
-        }
-
         body {
-            font-family: 'Noto Sans JP', sans-serif;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom, #FFDEE9, #B5FFFC);
             margin: 0;
-            padding: 20px;
-            background: var(--background);
-            color: #2D3047;
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .anime-header {
+            padding: 0;
             text-align: center;
-            font-family: 'Mochiy Pop P One', cursive;
-            color: var(--primary);
-            margin: 2rem 0;
-            position: relative;
         }
 
-        .anime-header::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 120px;
-            height: 4px;
-            background: var(--secondary);
-            border-radius: 2px;
+        header {
+            background-color: #FF9AA2;
+            padding: 20px;
+            color: white;
+            font-size: 2em;
         }
 
-        .nav-buttons {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin: 2rem 0;
+        nav {
+            background-color: #FFB7B2;
+            padding: 10px;
         }
 
-        .nav-button {
-            padding: 1.5rem;
+        nav button {
+            margin: 5px;
+            padding: 10px 20px;
+            background-color: #FFDAC1;
             border: none;
-            border-radius: 15px;
-            background: var(--card-bg);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 5px;
             cursor: pointer;
-            transition: transform 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+            font-size: 1em;
         }
 
-        .nav-button:hover {
-            transform: translateY(-3px);
+        nav button:hover {
+            background-color: #E2F0CB;
         }
 
-        .section {
+        main {
+            padding: 20px;
+        }
+
+        .hidden {
             display: none;
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 2rem;
-            margin: 2rem 0;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
 
-        .active-section {
-            display: block;
-            animation: fadeIn 0.5s ease;
+        section {
+            margin: 20px auto;
+            width: 80%;
+            background-color: #FFF1E6;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        /* Add remaining CSS styles from previous implementations */
-        /* ... (Include all previous styles for forms, progress bars, etc) ... */
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        form input {
+            margin: 5px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
 
-        @media (max-width: 768px) {
-            .nav-buttons {
-                grid-template-columns: 1fr;
-            }
+        form button, .edit-button, .remove-button, #toggleUserWordsBtn {
+            padding: 10px 20px;
+            background-color: #FFB7B2;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        form button:hover, .edit-button:hover, .remove-button:hover, #toggleUserWordsBtn:hover {
+            background-color: #FFDAC1;
+        }
+
+        .word-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #E2F0CB;
+            border-radius: 5px;
+        }
+
+        .word-item div {
+            flex-grow: 1;
+            text-align: left;
+        }
+
+        .trick {
+            font-style: italic;
+            color: #555;
+            margin-top: 5px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1 class="anime-header">🌸 Anime Japanese Academy 🎌</h1>
+    <header>
+        <h1>Learn Japanese with Fun Tricks!</h1>
+    </header>
+    <nav>
+        <button onclick="showSection('wordsWithTrick')">Words with Trick</button>
+        <button onclick="showSection('wordsCollected')">Words Collected</button>
+        <button onclick="startTest()">Test</button>
+        <button onclick="showSection('addYourWords')">Add Your Words</button>
+    </nav>
+    <main>
+        <section id="wordsWithTrick" class="hidden">
+            <h2>Words with Trick</h2>
+            <div id="trickWordsList"></div>
+        </section>
 
-        <div class="nav-buttons">
-            <button class="nav-button" onclick="showSection('learn')">
-                📖 Words with Tricks
-            </button>
-            <button class="nav-button" onclick="showSection('add')">
-                ✍️ Add Your Words
-            </button>
-            <button class="nav-button" onclick="showSection('collection')">
-                📚 Word Collection
-            </button>
-            <button class="nav-button" id="testBtn" onclick="startTest()" disabled>
-                🎯 Take Test
-            </button>
-        </div>
+        <section id="wordsCollected" class="hidden">
+            <h2>Words Collected</h2>
+            <div id="collectedWordsList"></div>
+            <button onclick="resetCollectedWords()">Reset Collected Words</button>
+        </section>
 
-        <!-- Include all section content from previous implementation -->
-        <!-- ... (Learning Section, Add Words Section, Collection Section, Test Section) ... -->
-    </div>
+        <section id="testSection" class="hidden">
+            <h2>Test Your Knowledge!</h2>
+            <div id="testContainer"></div>
+        </section>
+
+        <section id="addYourWords" class="hidden">
+            <h2>Add Your Words</h2>
+            <form id="addWordForm">
+                <input type="text" id="newWord" placeholder="Japanese Word" required>
+                <input type="text" id="newMeaning" placeholder="Meaning" required>
+                <input type="text" id="newTrick" placeholder="Memory Trick" required>
+                <button type="submit">Add Word</button>
+            </form>
+            <button id="toggleUserWordsBtn" onclick="toggleUserWords()">Show Your Added Words</button>
+            <div id="userWordsList" class="hidden"></div>
+        </section>
+    </main>
 
     <script>
-        // Enhanced Word Management System
-        class WordManager {
-            constructor() {
-                this.words = JSON.parse(localStorage.getItem('words')) || [];
-                this.collectedWords = JSON.parse(localStorage.getItem('collectedWords')) || [];
-                this.uniqueJapanese = new Set(
-                    this.collectedWords.map(index => this.words[index].japanese)
-                );
+        let collectedWords = JSON.parse(localStorage.getItem('collectedWords')) || [];
+        let userWords = JSON.parse(localStorage.getItem('userWords')) || [];
+        let userWordsVisible = false;
+
+        document.getElementById('addWordForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const newWord = document.getElementById('newWord').value.trim();
+            const newMeaning = document.getElementById('newMeaning').value.trim();
+            const newTrick = document.getElementById('newTrick').value.trim();
+
+            if (!collectedWords.some(word => word.word === newWord)) {
+                const wordData = { word: newWord, meaning: newMeaning, trick: newTrick };
+                userWords.push(wordData);
+                localStorage.setItem('userWords', JSON.stringify(userWords));
+                if (userWordsVisible) displayUserWords();
+            } else {
+                alert('This word is already in the collected words.');
             }
 
-            addWord(word, autoCollect = false) {
-                if (!this.uniqueJapanese.has(word.japanese)) {
-                    this.words.push(word);
-                    if (autoCollect) {
-                        this.collectedWords.push(this.words.length - 1);
-                        this.uniqueJapanese.add(word.japanese);
-                    }
-                    this.save();
-                    return true;
-                }
-                return false;
-            }
-
-            save() {
-                localStorage.setItem('words', JSON.stringify(this.words));
-                localStorage.setItem('collectedWords', JSON.stringify(this.collectedWords));
-            }
-
-            resetCollection() {
-                this.collectedWords = [];
-                this.uniqueJapanese.clear();
-                this.save();
-            }
-        }
-
-        // Initialize Application
-        const wordManager = new WordManager();
-        let testQuestions = [];
-
-        // Enhanced Test System
-        class TestSystem {
-            constructor() {
-                this.currentQuestion = 0;
-                this.score = 0;
-            }
-
-            generateTest() {
-                testQuestions = [...wordManager.collectedWords]
-                    .sort(() => Math.random() - 0.5)
-                    .slice(0, 100)
-                    .map(index => ({
-                        ...wordManager.words[index],
-                        options: this.generateOptions(index)
-                    }));
-            }
-
-            generateOptions(correctIndex) {
-                const correct = wordManager.words[correctIndex];
-                const options = [correct.meaning];
-                
-                while (options.length < 4) {
-                    const random = wordManager.words[
-                        Math.floor(Math.random() * wordManager.words.length)
-                    ];
-                    if (!options.includes(random.meaning)) {
-                        options.push(random.meaning);
-                    }
-                }
-                return options.sort(() => Math.random() - 0.5);
-            }
-        }
-
-        // UI Management
-        function updateUI() {
-            // Update collection display
-            // Update progress bar
-            // Update test button state
-        }
-
-        // Initialize Event Listeners
-        document.addEventListener('DOMContentLoaded', () => {
-            updateUI();
-            // Load initial section
+            document.getElementById('addWordForm').reset();
         });
 
-        // Implement all interactive functions from previous versions
-        // ... (showSection, addNewWord, resetCollection, etc) ...
+        function showSection(sectionId) {
+            document.querySelectorAll('main section').forEach(section => section.classList.add('hidden'));
+            document.getElementById(sectionId).classList.remove('hidden');
+            if (sectionId === 'wordsCollected') displayCollectedWords();
+        }
+
+        function toggleUserWords() {
+            userWordsVisible = !userWordsVisible;
+            const list = document.getElementById('userWordsList');
+            const toggleBtn = document.getElementById('toggleUserWordsBtn');
+            if (userWordsVisible) {
+                displayUserWords();
+                list.classList.remove('hidden');
+                toggleBtn.textContent = 'Hide Your Added Words';
+            } else {
+                list.classList.add('hidden');
+                toggleBtn.textContent = 'Show Your Added Words';
+            }
+        }
+
+        function displayUserWords() {
+            const list = document.getElementById('userWordsList');
+            list.innerHTML = '';
+            userWords.forEach((word, index) => {
+                const div = document.createElement('div');
+                div.textContent = `${index + 1}. ${word.word} - ${word.meaning} (${word.trick})`;
+                const addButton = document.createElement('button');
+                addButton.textContent = 'Add to Collected';
+                addButton.onclick = () => addToCollected(word);
+                div.appendChild(addButton);
+                list.appendChild(div);
+            });
+        }
+
+        function addToCollected(word) {
+            if (!collectedWords.some(w => w.word === word.word)) {
+                collectedWords.push(word);
+                localStorage.setItem('collectedWords', JSON.stringify(collectedWords));
+                displayCollectedWords();
+            } else {
+                alert('Duplicate words are not allowed in collected words.');
+            }
+        }
+
+        function displayCollectedWords() {
+            const list = document.getElementById('collectedWordsList');
+            list.innerHTML = '';
+            collectedWords.forEach((word, index) => {
+                const wordDiv = document.createElement('div');
+                wordDiv.className = 'word-item';
+
+                const wordText = document.createElement('div');
+                wordText.innerHTML = `<strong>${index + 1}. ${word.word}</strong> - ${word.meaning} <div class="trick">Trick: ${word.trick}</div>`;
+
+                const editButton = document.createElement('button');
+                editButton.textContent = 'Edit';
+                editButton.className = 'edit-button';
+                editButton.onclick = () => editWord(index);
+
+                const removeButton = document.createElement('button');
+                removeButton.textContent = 'Remove';
+                removeButton.className = 'remove-button';
+                removeButton.onclick = () => removeWord(index);
+
+                wordDiv.appendChild(wordText);
+                wordDiv.appendChild(editButton);
+                wordDiv.appendChild(removeButton);
+                list.appendChild(wordDiv);
+            });
+        }
+
+        function editWord(index) {
+            const wordToEdit = collectedWords[index];
+            const newWord = prompt("Edit the Japanese word:", wordToEdit.word);
+            const newMeaning = prompt("Edit the meaning:", wordToEdit.meaning);
+            const newTrick = prompt("Edit the memory trick:", wordToEdit.trick);
+
+            if (newWord && newMeaning && newTrick) {
+                collectedWords[index] = { word: newWord, meaning: newMeaning, trick: newTrick };
+                localStorage.setItem('collectedWords', JSON.stringify(collectedWords));
+                displayCollectedWords();
+            }
+        }
+
+        function removeWord(index) {
+            if (confirm("Are you sure you want to remove this word?")) {
+                collectedWords.splice(index, 1);
+                localStorage.setItem('collectedWords', JSON.stringify(collectedWords));
+                displayCollectedWords();
+            }
+        }
+
+        function resetCollectedWords() {
+            if (confirm('The removed words will not be restored. Are you sure?')) {
+                collectedWords = [];
+                localStorage.setItem('collectedWords', JSON.stringify(collectedWords));
+                displayCollectedWords();
+            }
+        }
     </script>
 </body>
 </html>
